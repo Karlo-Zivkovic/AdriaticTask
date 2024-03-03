@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Accommodation } from "../types";
+import DatePicker from "react-datepicker";
+import { IoCalendar } from "react-icons/io5";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface FilterProps {
   accommodation: Accommodation[] | undefined;
@@ -19,7 +22,8 @@ const amenitiesCro: { [key: string]: string } = {
 
 const Filter = ({ accommodation, setFilteredAccommodation }: FilterProps) => {
   const [capacity, setCapacity] = useState("");
-  const [date, setDate] = useState("");
+  const [arrivalDate, setArrivalDate] = useState<Date | null>(new Date());
+  const [departureDate, setDepartureDate] = useState<Date | null>(null);
   const [amenities, setAmenities] = useState({
     airConditioning: false,
     parkingSpace: false,
@@ -38,15 +42,25 @@ const Filter = ({ accommodation, setFilteredAccommodation }: FilterProps) => {
       );
     }
 
-    if (date !== "") {
+    // if (!isNaN(arrivalDate.getTime()) && !isNaN(departureDate.getTime())) {
+    if (arrivalDate && departureDate) {
       filtered = filtered?.filter((item) =>
         item.availableDates.some(
           (availableDate) =>
-            availableDate.intervalStart <= date &&
-            availableDate.intervalEnd >= date,
+            new Date(availableDate.intervalStart) <= arrivalDate! &&
+            new Date(availableDate.intervalEnd) >= departureDate!,
         ),
       );
     }
+    // if (date !== "") {
+    //   filtered = filtered?.filter((item) =>
+    //     item.availableDates.some(
+    //       (availableDate) =>
+    //         availableDate.intervalStart <= date &&
+    //         availableDate.intervalEnd >= date,
+    //     ),
+    //   );
+    // }
     filtered = filtered?.filter((item) =>
       Object.entries(amenities).every(
         ([amenity, value]) =>
@@ -58,7 +72,8 @@ const Filter = ({ accommodation, setFilteredAccommodation }: FilterProps) => {
   };
   const handleResetFilter = () => {
     setCapacity("");
-    setDate("");
+    setArrivalDate(null);
+    setDepartureDate(null);
     setAmenities({
       airConditioning: false,
       parkingSpace: false,
@@ -73,21 +88,44 @@ const Filter = ({ accommodation, setFilteredAccommodation }: FilterProps) => {
   return (
     <div className="p-4 bg-gray-100 rounded-md shadow-md w-[30rem]">
       <h2 className="text-xl font-semibold mb-4 text-gray-600">Filters</h2>
-      <div className="mb-4">
-        <label className="block text-gray-700" htmlFor="date">
-          Datum:
-        </label>
-        <input
-          type="date"
-          name="date"
-          id="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="block w-full mt-1 px-2 rounded-md border border-gray-300 outline-none shadow-sm focus:border-indigo-300 text-gray-700 pr-[19rem]"
-        />
+      <div className="flex gap-2">
+        <div className="mb-4 relative">
+          <label className="text-gray-700" htmlFor="dateOfArrival">
+            Datum dolaska:
+          </label>
+          <DatePicker
+            selected={arrivalDate}
+            name="dateOfArrival"
+            dateFormat="dd/MM/YYYY"
+            id="dateOfArrival"
+            onChange={(date) => setArrivalDate(date)}
+            minDate={new Date()}
+            placeholderText="dd/mm/yyyy"
+            className="mt-1 px-2 rounded-md border border-gray-300 outline-none shadow-sm focus:border-indigo-300 text-gray-700 w-full"
+          />
+          <IoCalendar className="absolute top-8 right-2 text-black" />
+        </div>
+        <div className="mb-4 relative">
+          <label className="text-gray-700" htmlFor="dateOfDeparture">
+            Datum odlaska:
+          </label>
+          <DatePicker
+            selected={departureDate}
+            name="dateOfDeparture"
+            id="dateOfDeparture"
+            dateFormat="dd/MM/YYYY"
+            placeholderText="dd/mm/yyyy"
+            onChange={(date) => setDepartureDate(date)}
+            minDate={
+              arrivalDate ? new Date(arrivalDate.getTime() + 86400000) : null
+            }
+            className="mt-1 px-2 rounded-md border border-gray-300 outline-none shadow-sm focus:border-indigo-300 text-gray-700 w-full"
+          />
+          <IoCalendar className="absolute top-8 right-2 text-black" />
+        </div>
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700" htmlFor="capacity">
+        <label className="text-gray-700" htmlFor="capacity">
           Kapacitet:
         </label>
         <input
