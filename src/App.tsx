@@ -35,7 +35,7 @@ export default function App() {
     : accommodation;
 
   return (
-    <div className="max-w-[1536px] mx-auto px-24 pt-14 pb-14 h-screen flex flex-col gap-20">
+    <div className="max-w-[1536px] mx-auto sm:px-24 px-6 pt-14 pb-14 h-screen flex flex-col gap-20">
       <div className="flex flex-col lg:flex-row gap-10  items-center">
         <Filter
           accommodation={accommodation}
@@ -53,7 +53,7 @@ export default function App() {
         <div className="flex gap-12 flex-wrap pb-20">
           {displayItems?.map((item) => (
             <div
-              className="w-full lg:w-[30%] md:w-[45%] bg-white"
+              className="w-full xl:w-[30%] md:w-[45%] bg-white"
               key={item.id}
             >
               <AccommodationCard singleAccommodation={item} />

@@ -42,7 +42,6 @@ const Filter = ({ accommodation, setFilteredAccommodation }: FilterProps) => {
       );
     }
 
-    // if (!isNaN(arrivalDate.getTime()) && !isNaN(departureDate.getTime())) {
     if (arrivalDate && departureDate) {
       filtered = filtered?.filter((item) =>
         item.availableDates.some(
@@ -52,15 +51,6 @@ const Filter = ({ accommodation, setFilteredAccommodation }: FilterProps) => {
         ),
       );
     }
-    // if (date !== "") {
-    //   filtered = filtered?.filter((item) =>
-    //     item.availableDates.some(
-    //       (availableDate) =>
-    //         availableDate.intervalStart <= date &&
-    //         availableDate.intervalEnd >= date,
-    //     ),
-    //   );
-    // }
     filtered = filtered?.filter((item) =>
       Object.entries(amenities).every(
         ([amenity, value]) =>
@@ -86,7 +76,7 @@ const Filter = ({ accommodation, setFilteredAccommodation }: FilterProps) => {
   };
 
   return (
-    <div className="p-4 bg-gray-100 rounded-md shadow-md w-[30rem]">
+    <div className="p-4 bg-gray-100 rounded-md shadow-md w-[20rem] sm:w-[30rem]">
       <h2 className="text-xl font-semibold mb-4 text-gray-600">Filters</h2>
       <div className="flex gap-2">
         <div className="mb-4 relative">
